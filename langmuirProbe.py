@@ -92,7 +92,7 @@ class LangmuirProbe:
         voltage = voltage[idx_sort]
         current = current[idx_sort]
 
-        non_zero_min = np.max(np.abs(np.diff(voltage))[np.where(np.abs(np.diff(voltage)) > 1e-8)])
+        non_zero_max = np.max(np.abs(np.diff(voltage))[np.where(np.abs(np.diff(voltage)) > 1e-8)])
         gradient = np.diff(gaussian_filter1d(current, 800))
 
         idx_max = np.argmax(gradient)
