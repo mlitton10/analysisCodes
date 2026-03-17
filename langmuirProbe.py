@@ -93,7 +93,12 @@ class LangmuirProbe:
 
         idx_max = np.argmax(gradient)
 
-        delta_0 = 0.01  # volts
+
+        if non_zero_min > 0.01:
+            delta_0 = non_zero_min
+        else:
+            delta_0 = 0.01  # volts
+        
         delta_max = 0.5  # volts
         te_values = []
         r_squared_data = []
