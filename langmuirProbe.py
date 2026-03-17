@@ -98,7 +98,7 @@ class LangmuirProbe:
         idx_max = np.argmax(gradient)
 
         if non_zero_min > 0.01:
-            delta_0 = non_zero_min
+            delta_0 = non_zero_max
         else:
             delta_0 = 0.01  # volts
 
