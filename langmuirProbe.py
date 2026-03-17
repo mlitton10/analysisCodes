@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import h5py
 from scipy.ndimage import gaussian_filter1d
+from scipy.signal import savgol_filter
 
 plt.style.use('/home/matt/latex_and_matplotlib_styles/matplotlib_styles/physrev.mplstyle')  # Set full path to
 # physrev.mplstyle if the file is not in the same in directory as the notebook
