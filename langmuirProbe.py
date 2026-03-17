@@ -97,7 +97,6 @@ class LangmuirProbe:
 
         idx_max = np.argmax(gradient)
 
-
         if non_zero_min > 0.01:
             delta_0 = non_zero_min
         else:
