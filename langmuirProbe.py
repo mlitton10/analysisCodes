@@ -136,7 +136,6 @@ class LangmuirProbe:
     def compute_plane_te(self, r_squared_cut):
         te_contour = np.zeros((self.n_x, self.n_y))
         for i, pos in enumerate(self.positions):
-            # print(pos)
             j = i % self.n_x
             k = i // self.n_y
 
