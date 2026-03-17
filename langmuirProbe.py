@@ -98,8 +98,8 @@ class LangmuirProbe:
             delta_0 = non_zero_min
         else:
             delta_0 = 0.01  # volts
-        
-        delta_max = 0.5  # volts
+
+        delta_max = 50 * delta_0  # volts
         te_values = []
         r_squared_data = []
 
