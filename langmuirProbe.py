@@ -32,7 +32,7 @@ class LangmuirProbe:
 
         # get raw data from file
         raw_voltage, raw_current, raw_time, raw_positions = self.get_data(file_name)
-        self.positionos = raw_positions
+        self.positions = raw_positions
         self.sweep_voltage, self.probe_current, self.probe_time, positions_dict = self.format_data(raw_voltage,
                                                                                                    raw_current,
                                                                                                    raw_time,
