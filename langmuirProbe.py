@@ -58,7 +58,7 @@ class LangmuirProbe:
 
     def format_data(self, voltage_data, current_data, time, positions):
 
-        filtered_data = savgol_filter(probe_current, 400, 5, axis=0)
+        filtered_data = savgol_filter(current_data, 400, 5, axis=0)
         gradient = np.diff(filtered_data, axis=-1)
         sweep_off = np.argmin(gradient, axis=1) - 500
         sweep_off_idx = int(np.mean(sweep_off))
