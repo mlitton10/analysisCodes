@@ -141,8 +141,7 @@ class LangmuirProbe:
             k = i // self.n_y
 
             te = self.compute_characteristic_te(self.sweep_voltage[i], self.probe_current[i], r_squared_cut)
-            # if np.isnan(te):
-            #    print(i)
+
             te_contour[j, k] = te
         return te_contour
 
