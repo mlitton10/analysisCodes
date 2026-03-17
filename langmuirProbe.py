@@ -88,6 +88,7 @@ class LangmuirProbe:
 
     def compute_characteristic_te(self, voltage, current, r_squared_cut):
 
+        non_zero_min = np.min(np.abs(np.diff(voltage))[np.where(np.abs(np.diff(voltage)) > 1e-8)])
         gradient = np.diff(gaussian_filter1d(current, 800))
 
         idx_max = np.argmax(gradient)
