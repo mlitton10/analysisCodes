@@ -56,9 +56,16 @@ class LangmuirProbe:
         return raw_voltage, raw_current, raw_time, raw_positions
 
     def format_data(self, voltage_data, current_data, time, positions):
-        sweep_voltage = voltage_data[:, :-5000] * self.attenuation_factor
-        probe_current = current_data[:, :-5000] / self.R
-        probe_time = time[:-5000] * 1e6
+
+        filtered_data = savgol_filter(probe_current, 400, 5, axis=0)
+        gradient = np.diff(filtered_data, axis=-1)
+        sweep_off = np.argmin(gradient, axis=1) - 500
+        sweep_off_idx = int(np.mean(sweep_off))
+
+
+        sweep_voltage = voltage_data[:, :sweep_off_idx] * self.attenuation_factor
+        probe_current = current_data[:, :sweep_off_idx] / self.R
+        probe_time = time[:sweep_off_idx] * 1e6
 
         # I don't like how the positions are stored, and I need some code to better collect the position data
         all_x = []
