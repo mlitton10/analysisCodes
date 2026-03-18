@@ -8,6 +8,7 @@ plt.style.use('/home/matt/latex_and_matplotlib_styles/matplotlib_styles/physrev.
 # physrev.mplstyle if the file is not in the same in directory as the notebook
 plt.rcParams['figure.dpi'] = "300"
 
+m_p = 938e6
 
 def find_closest_point(array, item):
     return np.argmin(np.abs(array - item))
@@ -27,10 +28,11 @@ def r_squared(y_true, y_pred):
 
 
 class LangmuirProbe:
-    def __init__(self, file_name, R, attenuation_factor, diameter, r_squared_cut=0.98):
+    def __init__(self, file_name, R, attenuation_factor, diameter, amu, r_squared_cut=0.98):
         self.R = R  # resistance to obtain true current of langmuir probe
         self.attenuation_factor = attenuation_factor  # scope attenuation and gain factor for sweep voltages
         self.probe_area = np.pi * (diameter / 2) ** 2
+        self.amu = amu
 
         # get raw data from file
         raw_voltage, raw_current, raw_time, raw_positions = self.get_data(file_name)
@@ -47,6 +49,7 @@ class LangmuirProbe:
 
         self.te_contour = self.compute_plane_te(r_squared_cut)
         self.I_sat_plane = self.compute_I_sat_plane()
+        self.n_e = self.compute_electron_density()
         pass
 
     def get_data(self, file_path):
@@ -153,6 +156,13 @@ class LangmuirProbe:
 
             I_sat_plane[j, k] = np.mean(self.probe_current[i][:int(0.1 * len(self.probe_current[i]))])
         return I_sat_plane
+
+    def compute_bohm_velocity(self):
+        return np.sqrt(self.te_contour / (self.amu * m_p)) * 2.99e10  # cm/s
+
+    def compute_electron_density(self):
+        v_bohm = self.compute_bohm_velocity()
+        return self.I_sat_plane / (v_bohm * self.probe_area * 0.6)
 
     def plot_sweep(self, file_path, iter):
         f, a = plt.subplots(1, 1)
