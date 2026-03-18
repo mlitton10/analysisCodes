@@ -110,7 +110,7 @@ class LangmuirProbe:
         non_zero_max = np.max(np.abs(np.diff(voltage))[np.where(np.abs(np.diff(voltage)) > 1e-8)])
         gradient = np.diff(gaussian_filter1d(current, int(0.01 * len(current))))
         #gradient = np.diff(savgol_filter(current, int(0.005 * len(current)), 5, axis=0), axis=-1)
-
+        current[np.where(current < 0)] = 1e-16
         idx_max = np.argmax(gradient)
 
         if non_zero_max > 0.01:
