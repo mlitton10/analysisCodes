@@ -112,7 +112,10 @@ class LangmuirProbe:
         voltage = voltage[idx_sort]
         current = current[idx_sort]
 
-        current = savgol_filter(probe_current_sorted, int(0.01*len(current)), 5, axis=-1)
+        voltage = voltage[::2]
+        current = current[::2]
+
+        current = savgol_filter(current, int(0.01*len(current)), 4, axis=-1)
 
         delta_0 = 0.05
         delta_max = np.max(voltage) - voltage[np.argmax(np.diff(current))]
