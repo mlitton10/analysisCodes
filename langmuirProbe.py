@@ -26,6 +26,8 @@ def r_squared(y_true, y_pred):
     r2 = 1 - (ss_res / ss_tot)
     return r2
 
+def rmse(y_data, y_fit):
+    return np.sqrt(np.mean((y_fit - y_data) ** 2)) / np.mean(y_data)
 
 class LangmuirProbe:
     def __init__(self, file_name, R, attenuation_factor, diameter, amu, r_squared_cut=0.98):
