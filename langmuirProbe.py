@@ -121,7 +121,8 @@ class LangmuirProbe:
         delta_max = np.max(voltage) - voltage[np.argmax(np.diff(current))]
         r_squared_data = []
         mse_data = []
-        for i in range(10, int(delta_max / delta_0)):
+        # this is a bit hard coded, don't like it
+        for i in range(15, int(delta_max / delta_0)):
             delta = i * delta_0
             ind1, ind2 = find_closest_point(voltage, np.max(voltage) - delta), find_closest_point(voltage,np.max(voltage))
 
