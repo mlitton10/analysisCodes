@@ -198,6 +198,7 @@ class LangmuirProbe:
 
         f.savefig(file_path)
         plt.show()
+        return f, a
 
     def plot_i_v_characteristic(self, file_path, iter):
         f, a = plt.subplots(1, 1)
@@ -212,6 +213,7 @@ class LangmuirProbe:
         f.savefig(file_path)
 
         plt.show()
+        return f, a
 
     def plot_te_distribution(self, file_path):
         f, a = plt.subplots(1, 1)
@@ -223,6 +225,7 @@ class LangmuirProbe:
 
         f.savefig(file_path)
         plt.show()
+        return f, a
 
     def plot_te_image(self, file_path):
         f, a = plt.subplots(1, 1)
@@ -240,6 +243,7 @@ class LangmuirProbe:
         a.set_title("$T_e$ Plane", fontsize=13)
         f.savefig(file_path)
         plt.show()
+        return f, a
 
     def plot_te_contour(self, file_path, n_contour=4):
 
@@ -256,6 +260,7 @@ class LangmuirProbe:
         a.set_title("Temperature Contour Map", fontsize=12)
         f.savefig(file_path)
         plt.show()
+        return f, a
 
 
     def plot_I_sat_image(self, file_path):
@@ -274,7 +279,8 @@ class LangmuirProbe:
         a.set_title("$I_{is}$ Plane", fontsize=15)
         f.savefig(file_path)
         plt.show()
-        pass
+        return f,a
+
 
     def plot_n_e_image(self, file_path):
         f, a = plt.subplots(1, 1)
@@ -309,6 +315,7 @@ class LangmuirProbe:
         a.set_title("Density Contour Map", fontsize=12)
         f.savefig(file_path)
         plt.show()
+        return f, a
 
     def plot_line_out_n_e(self, file_path):
 
@@ -322,6 +329,7 @@ class LangmuirProbe:
         a.set_title("Density Profile", fontsize=12)
         f.savefig(file_path)
         plt.show()
+        return f, a
 
     def plot_line_out_t_e(self, file_path):
 
@@ -335,3 +343,4 @@ class LangmuirProbe:
         a.set_title("Temperature Profile", fontsize=12)
         f.savefig(file_path)
         plt.show()
+        return f,a
