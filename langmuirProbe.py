@@ -28,6 +28,7 @@ def r_squared(y_true, y_pred):
     return r2
 
 def rmse(y_data, y_fit):
+    #  find the root mean squared error between a fit and the data
     return np.sqrt(np.mean((y_fit - y_data) ** 2)) / np.mean(y_data)
 
 class LangmuirProbe:
