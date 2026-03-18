@@ -49,7 +49,8 @@ class LangmuirProbe:
         self.x_positions = positions_dict['x_positions']
         self.y_positions = positions_dict['y_positions']
 
-        self.te_contour = self.compute_plane_te(r_squared_cut)
+        self.te_plane = self.compute_temperature_plane(r_squared_cut)
+        self.vp_plane = self.compute_plasma_potential_plane()
         self.I_sat_plane = self.compute_I_sat_plane()
         self.n_e = self.compute_electron_density()
         pass
