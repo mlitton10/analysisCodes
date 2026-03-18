@@ -394,12 +394,12 @@ class LangmuirProbe:
 
         im = a.imshow(self.vp_plane, origin='lower', extent=plot_extent, cmap='plasma')
 
-        cbar = f.colorbar(im, label=r'$n_{e}$ [$cm^{-3}$]')
+        cbar = f.colorbar(im, label=r'$V_{p}$ [V]')
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
 
-        a.set_title("$n_{e}$ Plane", fontsize=13)
+        a.set_title("$V_{p}$ Plane", fontsize=13)
         f.savefig(file_path)
         plt.show()
         return f,a
