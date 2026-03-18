@@ -66,9 +66,9 @@ class LangmuirProbe:
     def format_data(self, voltage_data, current_data, time, positions):
         n_t = len(time)
         #  Trim the data to cut it off before the sweep ends
-        filtered_data = savgol_filter(current_data, int(0.004 * n_t), 5, axis=0)
+        filtered_data = savgol_filter(current_data, int(0.005 * n_t), 5, axis=0)
         gradient = np.diff(filtered_data, axis=-1)
-        sweep_off = np.argmin(gradient, axis=1) - int(0.005 * n_t)
+        sweep_off = np.argmin(gradient, axis=1) - int(0.006 * n_t)
         sweep_off_idx = int(np.mean(sweep_off))
 
         #  Scale and cut data appropriately
@@ -101,7 +101,8 @@ class LangmuirProbe:
         current = current[idx_sort]
 
         non_zero_max = np.max(np.abs(np.diff(voltage))[np.where(np.abs(np.diff(voltage)) > 1e-8)])
-        gradient = np.diff(gaussian_filter1d(current, int(0.008 * len(current))))
+        gradient = np.diff(gaussian_filter1d(current, int(0.01 * len(current))))
+        #gradient = np.diff(savgol_filter(current, int(0.005 * len(current)), 5, axis=0), axis=-1)
 
         idx_max = np.argmax(gradient)
 
@@ -158,7 +159,13 @@ class LangmuirProbe:
             j = i % self.n_x
             k = i // self.n_y
 
-            I_sat_plane[j, k] = np.mean(self.probe_current[i][:int(0.1 * len(self.probe_current[i]))])
+            m, b = np.polyfit(self.sweep_voltage[i][:find_closest_point(self.sweep_voltage[i], 0) - 500],
+                              self.probe_current[i][0:find_closest_point(self.sweep_voltage[i], 0) - 500], 1)
+
+            #print(b * 1e3)
+            #I_sat_plane[j, k] = -np.mean(self.probe_current[i][:int(0.1 * len(self.probe_current[i]))])
+            I_sat_plane[j, k] = -1 * b
+
         return I_sat_plane
 
     def compute_bohm_velocity(self):
@@ -223,7 +230,7 @@ class LangmuirProbe:
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
 
-        a.set_title("Langmuir Scan", fontsize=15)
+        a.set_title("$T_e$ Plane", fontsize=13)
         f.savefig(file_path)
         plt.show()
 
@@ -257,7 +264,7 @@ class LangmuirProbe:
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
 
-        a.set_title("Langmuir Scan", fontsize=15)
+        a.set_title("$I_{is}$ Plane", fontsize=15)
         f.savefig(file_path)
         plt.show()
         pass
@@ -270,12 +277,54 @@ class LangmuirProbe:
 
         im = a.imshow(self.n_e, origin='lower', extent=plot_extent, cmap='plasma')
 
-        cbar = f.colorbar(im, label=r'$I_{is}$ [$cm^{-3}$]')
+        cbar = f.colorbar(im, label=r'$n_{e}$ [$cm^{-3}$]')
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
 
-        a.set_title("Langmuir Scan", fontsize=15)
+        a.set_title("$n_{e}$ Plane", fontsize=13)
         f.savefig(file_path)
         plt.show()
         pass
+
+    def plot_ne_contour(self, file_path, n_contour=4):
+
+        f, a = plt.subplots(1, 1)
+
+        plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
+                       np.min(self.y_positions), np.max(self.y_positions)]
+
+        a.contour(self.te_contour,origin='lower', extent=plot_extent, colors='k', levels=n_contour)
+
+        a.set_xlabel('x [cm]')
+        a.set_ylabel('y [cm]')
+
+        a.set_title("Density Contour Map", fontsize=12)
+        f.savefig(file_path)
+        plt.show()
+
+    def plot_line_out_n_e(self, file_path):
+
+        f, a = plt.subplots(1, 1)
+
+        a.plot(self.x_positions, self.n_e[:,int(self.n_x/2)])
+
+        a.set_xlabel('x [cm]')
+        a.set_ylabel('$n_e$ [cm$^{-3}$]')
+
+        a.set_title("Density Profile", fontsize=12)
+        f.savefig(file_path)
+        plt.show()
+
+    def plot_line_out_t_e(self, file_path):
+
+        f, a = plt.subplots(1, 1)
+
+        a.plot(self.x_positions, self.te_contour[:, int(self.n_x / 2)])
+
+        a.set_xlabel('x [cm]')
+        a.set_ylabel('$T_e$ [eV]')
+
+        a.set_title("Temperature Profile", fontsize=12)
+        f.savefig(file_path)
+        plt.show()
