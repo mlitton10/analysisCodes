@@ -45,7 +45,7 @@ class LangmuirProbe:
         self.y_positions = positions_dict['y_positions']
 
         self.te_contour = self.compute_plane_te(r_squared_cut)
-
+        self.I_sat_plane = self.compute_I_sat_plane()
         pass
 
     def get_data(self, file_path):
@@ -144,6 +144,15 @@ class LangmuirProbe:
             te_contour[j, k] = te
         return te_contour
 
+    def compute_I_sat_plane(self):
+        I_sat_plane = np.zeros((self.n_x, self.n_y))
+        for i, pos in enumerate(self.positions):
+            j = i % self.n_x
+            k = i // self.n_y
+
+            I_sat_plane[j, k] = np.mean(self.probe_current[i][:int(0.1 * len(self.probe_current[i]))])
+        return I_sat_plane
+
     def plot_sweep(self, file_path, iter):
         f, a = plt.subplots(1, 1)
 
@@ -220,3 +229,19 @@ class LangmuirProbe:
         plt.show()
 
 
+    def plot_I_sat_image(self, file_path):
+        f, a = plt.subplots(1, 1)
+
+        plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
+                       np.min(self.y_positions), np.max(self.y_positions)]
+
+        im = a.imshow(self.I_sat_plane*1e3, origin='lower', extent=plot_extent, cmap='plasma')
+
+        cbar = f.colorbar(im, label=r'$I_{is}$ [mA]')
+
+        a.set_xlabel('x [cm]')
+        a.set_ylabel('y [cm]')
+
+        a.set_title("Langmuir Scan", fontsize=15)
+        f.savefig(file_path)
+        plt.show()
