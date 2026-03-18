@@ -383,3 +383,21 @@ class LangmuirProbe:
         f.savefig(file_path)
         plt.show()
         return f,a
+
+    def plot_vp_image(self, file_path):
+        f, a = plt.subplots(1, 1)
+
+        plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
+                       np.min(self.y_positions), np.max(self.y_positions)]
+
+        im = a.imshow(self.vp_plane, origin='lower', extent=plot_extent, cmap='plasma')
+
+        cbar = f.colorbar(im, label=r'$n_{e}$ [$cm^{-3}$]')
+
+        a.set_xlabel('x [cm]')
+        a.set_ylabel('y [cm]')
+
+        a.set_title("$n_{e}$ Plane", fontsize=13)
+        f.savefig(file_path)
+        plt.show()
+        return f,a
