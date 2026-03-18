@@ -162,7 +162,7 @@ class LangmuirProbe:
 
     def compute_electron_density(self):
         v_bohm = self.compute_bohm_velocity()
-        return self.I_sat_plane / (v_bohm * self.probe_area * 0.6)
+        return self.I_sat_plane / (1.6e-19 * v_bohm * self.probe_area * 0.6)
 
     def plot_sweep(self, file_path, iter):
         f, a = plt.subplots(1, 1)
@@ -256,3 +256,22 @@ class LangmuirProbe:
         a.set_title("Langmuir Scan", fontsize=15)
         f.savefig(file_path)
         plt.show()
+        pass
+
+    def plot_n_e_image(self, file_path):
+        f, a = plt.subplots(1, 1)
+
+        plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
+                       np.min(self.y_positions), np.max(self.y_positions)]
+
+        im = a.imshow(self.n_e, origin='lower', extent=plot_extent, cmap='plasma')
+
+        cbar = f.colorbar(im, label=r'$I_{is}$ [cm^{-3}]')
+
+        a.set_xlabel('x [cm]')
+        a.set_ylabel('y [cm]')
+
+        a.set_title("Langmuir Scan", fontsize=15)
+        f.savefig(file_path)
+        plt.show()
+        pass
