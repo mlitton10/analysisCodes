@@ -52,7 +52,7 @@ class LangmuirProbe:
         self.te_plane = self.compute_temperature_plane(r_squared_cut)
         self.vp_plane = self.compute_plasma_potential_plane()
         self.I_sat_plane = self.compute_I_sat_plane()
-        self.n_e = self.compute_electron_density()
+        self.n_e_plane = self.compute_electron_density_plane()
         pass
 
     def get_data(self, file_path):
