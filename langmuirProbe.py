@@ -188,7 +188,7 @@ class LangmuirProbe:
             te_final = np.mean(te_values[quality_fit])
         return te_final
 
-    def compute_plane_te(self, r_squared_cut):
+    def compute_temperature_plane(self, r_squared_cut):
         te_contour = np.zeros((self.n_x, self.n_y))
         for i, pos in enumerate(self.positions):
             j = i % self.n_x
@@ -215,9 +215,9 @@ class LangmuirProbe:
         return I_sat_plane
 
     def compute_bohm_velocity(self):
-        return np.sqrt(self.te_contour / (self.amu * m_p)) * 2.99e10  # cm/s
+        return np.sqrt(self.te_plane / (self.amu * m_p)) * 2.99e10  # cm/s
 
-    def compute_electron_density(self):
+    def compute_electron_density_plane(self):
         v_bohm = self.compute_bohm_velocity()
         return self.I_sat_plane / (1.6e-19 * v_bohm * self.probe_area * 0.6)
 
@@ -257,7 +257,7 @@ class LangmuirProbe:
     def plot_te_distribution(self, file_path):
         f, a = plt.subplots(1, 1)
 
-        a.hist(self.te_contour.flatten(), bins=20)
+        a.hist(self.te_plane.flatten(), bins=20)
         a.set_xlabel(r"$T_e$ [eV]")
         a.set_title(r'$T_e Distribution$', fontsize=12)
         a.set_ylabel("Counts")
@@ -272,7 +272,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.te_contour, origin='lower', extent=plot_extent, cmap='plasma')
+        im = a.imshow(self.te_plane, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$T_e$ [eV]')
 
@@ -291,7 +291,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        a.contour(self.te_contour,origin='lower', extent=plot_extent, colors='k', levels=3)
+        a.contour(self.te_plane, origin='lower', extent=plot_extent, colors='k', levels=3)
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
@@ -327,7 +327,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.n_e, origin='lower', extent=plot_extent, cmap='plasma')
+        im = a.imshow(self.n_e_plane, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$n_{e}$ [$cm^{-3}$]')
 
@@ -337,7 +337,7 @@ class LangmuirProbe:
         a.set_title("$n_{e}$ Plane", fontsize=13)
         f.savefig(file_path)
         plt.show()
-        pass
+        return f,a
 
     def plot_ne_contour(self, file_path, n_contour=4):
 
@@ -346,7 +346,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        a.contour(self.te_contour,origin='lower', extent=plot_extent, colors='k', levels=n_contour)
+        a.contour(self.te_plane, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
@@ -360,7 +360,7 @@ class LangmuirProbe:
 
         f, a = plt.subplots(1, 1)
 
-        a.plot(self.x_positions, self.n_e[:,int(self.n_x/2)])
+        a.plot(self.x_positions, self.n_e_plane[:,int(self.n_x / 2)])
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('$n_e$ [cm$^{-3}$]')
@@ -374,7 +374,7 @@ class LangmuirProbe:
 
         f, a = plt.subplots(1, 1)
 
-        a.plot(self.x_positions, self.te_contour[:, int(self.n_x / 2)])
+        a.plot(self.x_positions, self.te_plane[:, int(self.n_x / 2)])
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('$T_e$ [eV]')
