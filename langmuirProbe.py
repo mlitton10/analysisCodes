@@ -104,6 +104,42 @@ class LangmuirProbe:
 
         return sweep_voltage, probe_current, probe_time, positions_dict
 
+    def compute_characteristic_plasma_potential(self, voltage, current):
+
+        idx_sort = np.argsort(voltage)
+        voltage = voltage[idx_sort]
+        current = current[idx_sort]
+
+        current = savgol_filter(probe_current_sorted, int(0.01*len(current)), 5, axis=-1)
+
+        delta_0 = 0.05
+        delta_max = np.max(voltage) - voltage[np.argmax(np.diff(current))]
+        r_squared_data = []
+        mse_data = []
+        for i in range(10, int(delta_max / delta_0)):
+            delta = i * delta_0
+            ind1, ind2 = find_closest_point(voltage, np.max(voltage) - delta), find_closest_point(voltage,np.max(voltage))
+
+            m, b = np.polyfit(voltage[ind1:ind2], current[ind1:ind2], 1)
+
+
+            mse_data.append(rmse(current[ind1:ind2], m * voltage[ind1:ind2] + b))
+
+        vp = np.max(voltage) - delta_0 * np.argmax(np.diff(mse_data))
+        return vp
+
+    def compute_plasma_potential_plane(self):
+        vp_plane = np.zeros((self.n_x, self.n_y))
+        for i, pos in enumerate(self.positions):
+            j = i % self.n_x
+            k = i // self.n_y
+
+            vp = self.compute_characteristic_plasma_potential(self.sweep_voltage[i], self.probe_current[i])
+
+            vp_plane[j, k] = vp
+
+        return vp_plane
+
     def compute_characteristic_te(self, voltage, current, r_squared_cut):
 
         idx_sort = np.argsort(voltage)
