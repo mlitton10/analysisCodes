@@ -27,9 +27,10 @@ def r_squared(y_true, y_pred):
 
 
 class LangmuirProbe:
-    def __init__(self, file_name, R, attenuation_factor, r_squared_cut=0.98):
+    def __init__(self, file_name, R, attenuation_factor, diameter, r_squared_cut=0.98):
         self.R = R  # resistance to obtain true current of langmuir probe
         self.attenuation_factor = attenuation_factor  # scope attenuation and gain factor for sweep voltages
+        self.probe_area = np.pi * (diameter / 2) ** 2
 
         # get raw data from file
         raw_voltage, raw_current, raw_time, raw_positions = self.get_data(file_name)
