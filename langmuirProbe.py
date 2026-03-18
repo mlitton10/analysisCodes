@@ -54,6 +54,9 @@ class LangmuirProbe:
 
     def get_data(self, file_path):
         with h5py.File(file_path, 'r') as f:
+            #  This is an issue, there is no gurantee which channel is which.
+            #  Better solution would be to have some label we could pull. Ideally standardized. Not much I can do here
+            #  Without updating the DAQ code. Maybe standard labels and formats for each probe type.
             raw_voltage = f['Acquisition']['LeCroy_scope']['Channel1'][()]
             raw_current = f['Acquisition']['LeCroy_scope']['Channel3'][()]
             raw_time = f['Acquisition']['LeCroy_scope']['time'][()]
@@ -61,10 +64,10 @@ class LangmuirProbe:
         return raw_voltage, raw_current, raw_time, raw_positions
 
     def format_data(self, voltage_data, current_data, time, positions):
-
-        filtered_data = savgol_filter(current_data, 400, 5, axis=0)
+        n_t = len(time)
+        filtered_data = savgol_filter(current_data, int(0.004 * n_t), 5, axis=0)
         gradient = np.diff(filtered_data, axis=-1)
-        sweep_off = np.argmin(gradient, axis=1) - 500
+        sweep_off = np.argmin(gradient, axis=1) - int(0.005 * n_t)
         sweep_off_idx = int(np.mean(sweep_off))
 
 
@@ -97,7 +100,7 @@ class LangmuirProbe:
         current = current[idx_sort]
 
         non_zero_max = np.max(np.abs(np.diff(voltage))[np.where(np.abs(np.diff(voltage)) > 1e-8)])
-        gradient = np.diff(gaussian_filter1d(current, 800))
+        gradient = np.diff(gaussian_filter1d(current, int(0.008 * len(current))))
 
         idx_max = np.argmax(gradient)
 
