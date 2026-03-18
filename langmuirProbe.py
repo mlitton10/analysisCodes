@@ -10,8 +10,9 @@ plt.rcParams['figure.dpi'] = "300"
 
 m_p = 938e6
 
-def find_closest_point(array, item):
-    return np.argmin(np.abs(array - item))
+def find_closest_point(array, value):
+    # find the closest point in an array to a given value
+    return np.argmin(np.abs(array - value))
 
 
 def r_squared(y_true, y_pred):
