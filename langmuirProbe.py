@@ -73,7 +73,7 @@ class LangmuirProbe:
         n_t = len(time)
 
         #  Trim the data to cut it off before the sweep ends
-        filtered_data = savgol_filter(current_data, int(0.005 * n_t), 5, axis=0)
+        filtered_data = savgol_filter(current_data, int(0.005 * n_t), 5, axis=-1)
         gradient = np.diff(filtered_data, axis=-1)
         sweep_off = np.argmin(gradient, axis=1) - int(0.006 * n_t)
         sweep_off_idx = int(np.mean(sweep_off))
