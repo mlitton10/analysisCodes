@@ -31,8 +31,8 @@ class LangmuirProbe:
     def __init__(self, file_name, R, attenuation_factor, diameter, amu, r_squared_cut=0.98):
         self.R = R  # resistance to obtain true current of langmuir probe
         self.attenuation_factor = attenuation_factor  # scope attenuation and gain factor for sweep voltages
-        self.probe_area = np.pi * (diameter / 2) ** 2
-        self.amu = amu
+        self.probe_area = np.pi * (diameter / 2) ** 2  #  from probe construction, not accounting for sheath
+        self.amu = amu  # mass of the fueling gas
 
         # get raw data from file
         raw_voltage, raw_current, raw_time, raw_positions = self.get_data(file_name)
@@ -65,12 +65,13 @@ class LangmuirProbe:
 
     def format_data(self, voltage_data, current_data, time, positions):
         n_t = len(time)
+        #  Trim the data to cut it off before the sweep ends
         filtered_data = savgol_filter(current_data, int(0.004 * n_t), 5, axis=0)
         gradient = np.diff(filtered_data, axis=-1)
         sweep_off = np.argmin(gradient, axis=1) - int(0.005 * n_t)
         sweep_off_idx = int(np.mean(sweep_off))
 
-
+        #  Scale and cut data appropriately
         sweep_voltage = voltage_data[:, :sweep_off_idx] * self.attenuation_factor
         probe_current = current_data[:, :sweep_off_idx] / self.R
         probe_time = time[:sweep_off_idx] * 1e6
@@ -269,7 +270,7 @@ class LangmuirProbe:
 
         im = a.imshow(self.n_e, origin='lower', extent=plot_extent, cmap='plasma')
 
-        cbar = f.colorbar(im, label=r'$I_{is}$ [cm^{-3}]')
+        cbar = f.colorbar(im, label=r'$I_{is}$ [$cm^{-3}$]')
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
