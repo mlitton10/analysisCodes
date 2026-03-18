@@ -64,6 +64,12 @@ class LangmuirProbe:
         return raw_voltage, raw_current, raw_time, raw_positions
 
     def format_data(self, voltage_data, current_data, time, positions):
+
+        #  Downsample data
+        current_data = current_data[:,::2]
+        voltage_data = voltage_data[:, ::2]
+        time = time[::2]
+
         n_t = len(time)
         #  Trim the data to cut it off before the sweep ends
         filtered_data = savgol_filter(current_data, int(0.005 * n_t), 5, axis=0)
