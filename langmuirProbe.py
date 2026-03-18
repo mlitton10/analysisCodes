@@ -71,6 +71,7 @@ class LangmuirProbe:
         time = time[::2]
 
         n_t = len(time)
+
         #  Trim the data to cut it off before the sweep ends
         filtered_data = savgol_filter(current_data, int(0.005 * n_t), 5, axis=0)
         gradient = np.diff(filtered_data, axis=-1)
