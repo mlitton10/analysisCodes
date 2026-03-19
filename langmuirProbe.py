@@ -399,7 +399,7 @@ class LangmuirProbe:
 
         a.set_title("Temperature Profile", fontsize=12)
         a.legend()
-        a.set_xlim(0,)
+        a.set_ylim(0,)
         f.savefig(file_path)
         plt.show()
         return f,a
