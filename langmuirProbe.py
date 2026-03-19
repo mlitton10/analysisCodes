@@ -390,6 +390,7 @@ class LangmuirProbe:
         a.set_ylabel('$T_e$ [eV]')
 
         a.set_title("Temperature Profile", fontsize=12)
+        a.legend()
         f.savefig(file_path)
         plt.show()
         return f,a
