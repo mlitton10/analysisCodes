@@ -190,7 +190,7 @@ class LangmuirProbe:
         i = 1
         while len(quality_fit[0]) < 4:
             quality_fit = np.where(np.array(r_squared_data) > r_squared_cut - i * 0.01)
-            sub_quality_fit = np.where(np.array(r_squared_data) > r_squared_cut - i * 0. - 0.05)
+            sub_quality_fit = np.where(np.array(r_squared_data) > r_squared_cut - i * 0.01 - 0.05)
 
             i += 1
         if i > 10:
