@@ -198,7 +198,7 @@ class LangmuirProbe:
             te_error = np.nan
         else:
             te_final = np.mean(te_values[quality_fit])
-            te_error = np.std(te_values[sub_quality_fit])
+            te_error = np.nanstd(te_values[sub_quality_fit])
         return te_final, te_error
 
     def compute_temperature_plane(self, r_squared_cut):
@@ -287,7 +287,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.te_plane, origin='lower', extent=plot_extent, cmap='plasma')
+        im = a.imshow(self.te_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$T_e$ [eV]')
 
@@ -306,7 +306,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        a.contour(self.te_plane, origin='lower', extent=plot_extent, colors='k', levels=3)
+        a.contour(self.te_plane.T, origin='lower', extent=plot_extent, colors='k', levels=3)
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
@@ -323,7 +323,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.I_sat_plane*1e3, origin='lower', extent=plot_extent, cmap='plasma')
+        im = a.imshow(self.I_sat_plane.T*1e3, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$I_{is}$ [mA]')
 
@@ -342,7 +342,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.n_e_plane, origin='lower', extent=plot_extent, cmap='plasma')
+        im = a.imshow(self.n_e_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$n_{e}$ [$cm^{-3}$]')
 
@@ -361,7 +361,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        a.contour(self.te_plane, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
+        a.contour(self.ne_plane.T, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
@@ -410,7 +410,7 @@ class LangmuirProbe:
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.vp_plane, origin='lower', extent=plot_extent, cmap='plasma')
+        im = a.imshow(self.vp_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$V_{p}$ [V]')
 
