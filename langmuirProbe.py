@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
-from scipy.ndimage import gaussian_filter1d
+from scipy.ndimage import gaussian_filter1d, gaussian_filter
 from scipy.signal import savgol_filter
 
 plt.style.use('/home/matt/latex_and_matplotlib_styles/matplotlib_styles/physrev.mplstyle')  # Set full path to
@@ -281,13 +281,17 @@ class LangmuirProbe:
         plt.show()
         return f, a
 
-    def plot_te_image(self, file_path):
+    def plot_te_image(self, file_path, smoothing=False):
         f, a = plt.subplots(1, 1)
 
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.te_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
+        if smoothing:
+            smoothed = gaussian_filter(self.te_plane, int(0.1 * self.n_x))
+            im = a.imshow(smoothed.T, origin='lower', extent=plot_extent, cmap='plasma')
+        else:
+            im = a.imshow(self.te_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$T_e$ [eV]')
 
@@ -299,14 +303,18 @@ class LangmuirProbe:
         plt.show()
         return f, a
 
-    def plot_te_contour(self, file_path, n_contour=4):
+    def plot_te_contour(self, file_path, n_contour=4, smoothing=False):
 
         f, a = plt.subplots(1, 1)
 
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        a.contour(self.te_plane.T, origin='lower', extent=plot_extent, colors='k', levels=3)
+        if smoothing:
+            smoothed_data = gaussian_filter(self.te_plane, int(0.1 * self.n_x))
+            a.contour(self.smoothed_data.T, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
+        else:
+            a.contour(self.te_plane.T, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
@@ -317,13 +325,17 @@ class LangmuirProbe:
         return f, a
 
 
-    def plot_I_sat_image(self, file_path):
+    def plot_I_sat_image(self, file_path, smoothing=False):
         f, a = plt.subplots(1, 1)
 
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.I_sat_plane.T*1e3, origin='lower', extent=plot_extent, cmap='plasma')
+        if smoothing:
+            smoothed_data = gaussian_filter(self.I_sat_plane, int(0.1 * self.n_x))
+            im = a.imshow(smoothed_data.T * 1e3, origin='lower', extent=plot_extent, cmap='plasma')
+        else:
+            im = a.imshow(self.I_sat_plane.T*1e3, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$I_{is}$ [mA]')
 
@@ -336,13 +348,17 @@ class LangmuirProbe:
         return f,a
 
 
-    def plot_n_e_image(self, file_path):
+    def plot_n_e_image(self, file_path, smoothing=False):
         f, a = plt.subplots(1, 1)
 
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.n_e_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
+        if smoothing:
+            smoothed_data = gaussian_filter(self.n_e_plane, int(0.1 * self.n_x))
+            im = a.imshow(smoothed_data.T, origin='lower', extent=plot_extent, cmap='plasma')
+        else:
+            im = a.imshow(self.n_e_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$n_{e}$ [$cm^{-3}$]')
 
@@ -354,14 +370,18 @@ class LangmuirProbe:
         plt.show()
         return f,a
 
-    def plot_ne_contour(self, file_path, n_contour=4):
+    def plot_ne_contour(self, file_path, n_contour=4, smoothing=False):
 
         f, a = plt.subplots(1, 1)
 
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        a.contour(self.ne_plane.T, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
+        if smoothing:
+            smoothed_data = gaussian_filter(self.ne_plane, int(0.1 * self.n_x))
+            a.contour(self.smoothed_data.T, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
+        else:
+            a.contour(self.ne_plane.T, origin='lower', extent=plot_extent, colors='k', levels=n_contour)
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('y [cm]')
@@ -404,13 +424,17 @@ class LangmuirProbe:
         plt.show()
         return f,a
 
-    def plot_vp_image(self, file_path):
+    def plot_vp_image(self, file_path, smoothing=False):
         f, a = plt.subplots(1, 1)
 
         plot_extent = [np.min(self.x_positions), np.max(self.x_positions),
                        np.min(self.y_positions), np.max(self.y_positions)]
 
-        im = a.imshow(self.vp_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
+        if smoothing:
+            smoothed_data = gaussian_filter(self.vp_plane, int(0.1 * self.n_x))
+            im = a.imshow(smoothed_data.T, origin='lower', extent=plot_extent, cmap='plasma')
+        else:
+            im = a.imshow(self.vp_plane.T, origin='lower', extent=plot_extent, cmap='plasma')
 
         cbar = f.colorbar(im, label=r'$V_{p}$ [V]')
 
