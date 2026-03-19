@@ -144,6 +144,8 @@ class LangmuirProbe:
 
             vp_plane[j, k] = vp
 
+      #  vp_plane_filter = np.where(vp_plane > np.std(vp_plane)*3, np.nan, vp_plane)
+        vp_plane[np.where(vp_plane > np.std(vp_plane) * 4 + np.mean(vp_plane))] = np.nan  # remove bad data
         return vp_plane
 
     def compute_characteristic_te(self, voltage, current, r_squared_cut):
@@ -214,9 +216,9 @@ class LangmuirProbe:
             m, b = np.polyfit(self.sweep_voltage[i][:find_closest_point(self.sweep_voltage[i], 0) - 500],
                               self.probe_current[i][0:find_closest_point(self.sweep_voltage[i], 0) - 500], 1)
 
-            #print(b * 1e3)
-            #I_sat_plane[j, k] = -np.mean(self.probe_current[i][:int(0.1 * len(self.probe_current[i]))])
-            I_sat_plane[j, k] = -1 * b
+            #  I_sat_plane[j, k] = -np.mean(self.probe_current[i][:int(0.1 * len(self.probe_current[i]))])
+            #  I_sat_plane[j, k] = -1 * b
+            I_sat_plane[j,k] = -1 * (m * self.vp_plane[j,k] + b)
 
         return I_sat_plane
 
