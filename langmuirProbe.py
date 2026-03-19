@@ -51,7 +51,7 @@ class LangmuirProbe:
         self.x_positions = positions_dict['x_positions']
         self.y_positions = positions_dict['y_positions']
 
-        self.te_plane = self.compute_temperature_plane(r_squared_cut)
+        self.te_plane, self.te_plane_error = self.compute_temperature_plane(r_squared_cut)
         self.vp_plane = self.compute_plasma_potential_plane()
         self.I_sat_plane = self.compute_I_sat_plane()
         self.n_e_plane = self.compute_electron_density_plane()
@@ -192,20 +192,24 @@ class LangmuirProbe:
             i += 1
         if i > 10:
             te_final = np.nan
+            te_error = np.nan
         else:
             te_final = np.mean(te_values[quality_fit])
-        return te_final
+            te_error = np.std(te_values[quality_fit])
+        return te_final, te_error
 
     def compute_temperature_plane(self, r_squared_cut):
-        te_contour = np.zeros((self.n_x, self.n_y))
+        te_plane = np.zeros((self.n_x, self.n_y))
+        te_plane_error = np.zeros((self.n_x, self.n_y))
         for i, pos in enumerate(self.positions):
             j = i % self.n_x
             k = i // self.n_y
 
-            te = self.compute_characteristic_te(self.sweep_voltage[i], self.probe_current[i], r_squared_cut)
+            te, te_error = self.compute_characteristic_te(self.sweep_voltage[i], self.probe_current[i], r_squared_cut)
 
-            te_contour[j, k] = te
-        return te_contour
+            te_plane[j, k] = te
+            te_plane_error[j, k] = te_error
+        return te_plane, te_plane_error
 
     def compute_I_sat_plane(self):
         I_sat_plane = np.zeros((self.n_x, self.n_y))
