@@ -391,7 +391,7 @@ class LangmuirProbe:
 
         index_y_0 = int(self.n_y / 2)
         a.errorbar(self.x_positions, self.te_plane[:, index_y_0], self.te_plane_error[:, index_y_0],
-                   label=r'$T_e(x, y=0)$', capsize=10, marker='.', ms=15)
+                   label=r'$T_e(x, y=0)$', capsize=3, marker='.', ms=2)
         a.plot(self.x_positions, np.mean(self.te_plane, axis=1), label=r'$\langle T_e \rangle$')
 
         a.set_xlabel('x [cm]')
