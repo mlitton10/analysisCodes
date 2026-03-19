@@ -186,16 +186,19 @@ class LangmuirProbe:
 
         te_values = np.array(te_values)
         quality_fit = np.where(np.array(r_squared_data) > r_squared_cut)
+        sub_quality_fit = np.where(np.array(r_squared_data) > r_squared_cut - 0.05)
         i = 1
         while len(quality_fit[0]) < 4:
             quality_fit = np.where(np.array(r_squared_data) > r_squared_cut - i * 0.01)
+            sub_quality_fit = np.where(np.array(r_squared_data) > r_squared_cut - i * 0. - 0.05)
+
             i += 1
         if i > 10:
             te_final = np.nan
             te_error = np.nan
         else:
             te_final = np.mean(te_values[quality_fit])
-            te_error = np.std(te_values[quality_fit])
+            te_error = np.std(te_values[sub_quality_fit])
         return te_final, te_error
 
     def compute_temperature_plane(self, r_squared_cut):
@@ -387,7 +390,8 @@ class LangmuirProbe:
         f, a = plt.subplots(1, 1)
 
         index_y_0 = int(self.n_y / 2)
-        a.errorbar(self.x_positions, self.te_plane[:, index_y_0], self.te_plane_error[:, index_y_0], label=r'$T_e(x, y=0)$')
+        a.errorbar(self.x_positions, self.te_plane[:, index_y_0], self.te_plane_error[:, index_y_0],
+                   label=r'$T_e(x, y=0)$', capsize=10, marker='.', ms=15)
         a.plot(self.x_positions, np.mean(self.te_plane, axis=1), label=r'$\langle T_e \rangle$')
 
         a.set_xlabel('x [cm]')
