@@ -382,7 +382,9 @@ class LangmuirProbe:
 
         f, a = plt.subplots(1, 1)
 
-        a.plot(self.x_positions, self.te_plane[:, int(self.n_x / 2)])
+        index_y_0 = int(self.n_y / 2)
+        a.errorbar(self.x_positions, self.te_plane[:, index_y_0], self.te_plane_error[:, index_y_0], label=r'$T_e(x, y=0)$')
+        a.plot(self.x_positions, np.mean(self.te_plane, axis=1), label=r'$\langle T_e \rangle$')
 
         a.set_xlabel('x [cm]')
         a.set_ylabel('$T_e$ [eV]')
